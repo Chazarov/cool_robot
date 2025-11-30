@@ -2,4 +2,5 @@ numpy
 librosa
 scikit-learn
 scipy
+vosk
 
