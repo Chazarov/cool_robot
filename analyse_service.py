@@ -37,11 +37,11 @@ def merge_transcription_diarization(audio_path, n_speakers=2):
     if current_text:
         dialogue.append((current_speaker, " ".join(current_text)))
     
-    return dialogue
+    return dialogue, diarization
 
 
 if __name__ == "__main__":
-    dialogue = merge_transcription_diarization("examples/e2.mp3", n_speakers=2)
+    dialogue, diarization = merge_transcription_diarization("examples/e2.mp3", n_speakers=2)
     
     for speaker, text in dialogue:
         print(f"{speaker}: {text}")
