@@ -1,9 +1,12 @@
-import tkinter as tk
-from tkinter import filedialog, scrolledtext, messagebox
-from tkinter import ttk
+import customtkinter as ctk
+from tkinter import filedialog, messagebox
 import threading
+from datetime import datetime
 from analyse_service import merge_transcription_diarization
 from statistics_service import calculate_statistics
+
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("blue")
 
 
 class StatisticsWindow:
@@ -11,60 +14,70 @@ class StatisticsWindow:
     
     def __init__(self, parent, filename, stats):
         """Инициализация окна статистики"""
-        self.window = tk.Toplevel(parent)
-        self.window.title(f"Статистика: {filename.split('/')[-1]}")
-        self.window.geometry("600x500")
+        self.window = ctk.CTkToplevel(parent)
+        self.window.title(f"ОТКЛИК - Статистика: {filename}")
+        self.window.geometry("650x600")
         
-        main_frame = tk.Frame(self.window, padx=20, pady=20)
-        main_frame.pack(fill=tk.BOTH, expand=True)
+        main_frame = ctk.CTkFrame(self.window, fg_color="transparent")
+        main_frame.pack(fill="both", expand=True, padx=20, pady=20)
         
-        tk.Label(main_frame, text="Статистика анализа", 
-                font=("Arial", 14, "bold")).pack(pady=10)
+        ctk.CTkLabel(main_frame, text="📊 Статистика анализа", 
+                    font=("Segoe UI", 24, "bold"), text_color="white").pack(pady=15)
         
         # Количество реплик
-        turns_frame = tk.LabelFrame(main_frame, text="Индекс активности (количество реплик)", 
-                                     padx=10, pady=10)
-        turns_frame.pack(fill=tk.X, pady=10)
+        turns_frame = ctk.CTkFrame(main_frame, fg_color=("#1a1a2e", "#16213e"), corner_radius=20)
+        turns_frame.pack(fill="x", pady=10, padx=5)
+        
+        ctk.CTkLabel(turns_frame, text="Индекс активности (количество реплик)", 
+                    font=("Segoe UI", 14, "bold"), text_color="#9d4edd").pack(pady=10, padx=20, anchor="w")
         
         for speaker, turns in stats['speaker_turns'].items():
-            tk.Label(turns_frame, text=f"{speaker}: {turns} реплик", 
-                    font=("Arial", 10)).pack(anchor=tk.W)
+            ctk.CTkLabel(turns_frame, text=f"{speaker}: {turns} реплик", 
+                        font=("Segoe UI", 12), text_color="white").pack(pady=5, padx=30, anchor="w")
         
         # Средняя длина высказываний
-        length_frame = tk.LabelFrame(main_frame, text="Средняя длина высказываний (слов)", 
-                                      padx=10, pady=10)
-        length_frame.pack(fill=tk.X, pady=10)
+        length_frame = ctk.CTkFrame(main_frame, fg_color=("#1a1a2e", "#16213e"), corner_radius=20)
+        length_frame.pack(fill="x", pady=10, padx=5)
+        
+        ctk.CTkLabel(length_frame, text="Средняя длина высказываний (слов)", 
+                    font=("Segoe UI", 14, "bold"), text_color="#9d4edd").pack(pady=10, padx=20, anchor="w")
         
         for speaker, avg_len in stats['speaker_avg_length'].items():
-            tk.Label(length_frame, text=f"{speaker}: {avg_len:.1f} слов", 
-                    font=("Arial", 10)).pack(anchor=tk.W)
+            ctk.CTkLabel(length_frame, text=f"{speaker}: {avg_len:.1f} слов", 
+                        font=("Segoe UI", 12), text_color="white").pack(pady=5, padx=30, anchor="w")
         
         # Активность обсуждения
-        activity_frame = tk.LabelFrame(main_frame, text="Активность обсуждения", 
-                                        padx=10, pady=10)
-        activity_frame.pack(fill=tk.X, pady=10)
+        activity_frame = ctk.CTkFrame(main_frame, fg_color=("#1a1a2e", "#16213e"), corner_radius=20)
+        activity_frame.pack(fill="x", pady=10, padx=5)
         
-        tk.Label(activity_frame, text=f"Общее количество пауз: {stats['total_pauses']}", 
-                font=("Arial", 10)).pack(anchor=tk.W)
-        tk.Label(activity_frame, text=f"Средняя длина паузы: {stats['avg_pause']:.2f} сек", 
-                font=("Arial", 10)).pack(anchor=tk.W)
-        tk.Label(activity_frame, text=f"Оценка активности: {stats['activity_score']:.1f}/100", 
-                font=("Arial", 10, "bold"), fg="#4CAF50").pack(anchor=tk.W, pady=5)
+        ctk.CTkLabel(activity_frame, text="Активность обсуждения", 
+                    font=("Segoe UI", 14, "bold"), text_color="#9d4edd").pack(pady=10, padx=20, anchor="w")
+        
+        ctk.CTkLabel(activity_frame, text=f"Общее количество пауз: {stats['total_pauses']}", 
+                    font=("Segoe UI", 12), text_color="white").pack(pady=2, padx=30, anchor="w")
+        ctk.CTkLabel(activity_frame, text=f"Средняя длина паузы: {stats['avg_pause']:.2f} сек", 
+                    font=("Segoe UI", 12), text_color="white").pack(pady=2, padx=30, anchor="w")
+        ctk.CTkLabel(activity_frame, text=f"Оценка активности: {stats['activity_score']:.1f}/100", 
+                    font=("Segoe UI", 12, "bold"), text_color="#4cc9f0").pack(pady=5, padx=30, anchor="w")
         
         # Коэффициент равномерности
-        uniform_frame = tk.LabelFrame(main_frame, text="Равномерность распределения речи", 
-                                       padx=10, pady=10)
-        uniform_frame.pack(fill=tk.X, pady=10)
+        uniform_frame = ctk.CTkFrame(main_frame, fg_color=("#1a1a2e", "#16213e"), corner_radius=20)
+        uniform_frame.pack(fill="x", pady=10, padx=5)
         
-        tk.Label(uniform_frame, 
-                text=f"Коэффициент равномерности: {stats['uniformity_coefficient']:.1f}/100", 
-                font=("Arial", 10, "bold"), fg="#2196F3").pack(anchor=tk.W)
-        tk.Label(uniform_frame, 
-                text="(100 - идеально равномерно, 0 - один говорит больше всех)", 
-                font=("Arial", 8), fg="gray").pack(anchor=tk.W)
+        ctk.CTkLabel(uniform_frame, text="Равномерность распределения речи", 
+                    font=("Segoe UI", 14, "bold"), text_color="#9d4edd").pack(pady=10, padx=20, anchor="w")
         
-        tk.Button(main_frame, text="Закрыть", command=self.window.destroy,
-                 bg="#f44336", fg="white", padx=30, pady=5).pack(pady=20)
+        ctk.CTkLabel(uniform_frame, 
+                    text=f"Коэффициент равномерности: {stats['uniformity_coefficient']:.1f}/100", 
+                    font=("Segoe UI", 12, "bold"), text_color="#4cc9f0").pack(pady=5, padx=30, anchor="w")
+        ctk.CTkLabel(uniform_frame, 
+                    text="(100 - идеально равномерно, 0 - один говорит больше всех)", 
+                    font=("Segoe UI", 10), text_color="#808080").pack(pady=2, padx=30, anchor="w")
+        
+        ctk.CTkButton(main_frame, text="Закрыть", command=self.window.destroy,
+                     fg_color="#c77dff", hover_color="#9d4edd", 
+                     font=("Segoe UI", 14, "bold"), corner_radius=25,
+                     height=40, width=200).pack(pady=20)
 
 
 class AudioAnalyzerGUI:
@@ -73,59 +86,98 @@ class AudioAnalyzerGUI:
     def __init__(self, root):
         """Инициализация интерфейса"""
         self.root = root
-        self.root.title("Анализ аудио - Транскрибация и Диаризация")
-        self.root.geometry("800x600")
+        self.root.title("ОТКЛИК - Анализ аудиозаписей")
+        self.root.geometry("1000x700")
         
         self.audio_files = {}
         self.current_file = None
+        self.meeting_counter = 0
         
         self.create_widgets()
     
     def create_widgets(self):
         """Создание виджетов интерфейса"""
-        # Верхняя панель
-        top_frame = tk.Frame(self.root, pady=10)
-        top_frame.pack(fill=tk.X)
+        # Заголовок
+        header_frame = ctk.CTkFrame(self.root, fg_color="transparent")
+        header_frame.pack(fill="x", padx=20, pady=(20, 10))
         
-        tk.Button(top_frame, text="Загрузить аудио", command=self.load_audio, 
-                 bg="#4CAF50", fg="white", padx=20, pady=5).pack(side=tk.LEFT, padx=10)
+        ctk.CTkLabel(header_frame, text="🎙️ ОТКЛИК", 
+                    font=("Segoe UI", 32, "bold"), 
+                    text_color="#9d4edd").pack()
+        ctk.CTkLabel(header_frame, text="Анализ аудиозаписей встреч", 
+                    font=("Segoe UI", 14), 
+                    text_color="#4cc9f0").pack()
         
-        tk.Label(top_frame, text="Кол-во спикеров:").pack(side=tk.LEFT, padx=5)
-        self.speakers_var = tk.StringVar(value="2")
-        tk.Entry(top_frame, textvariable=self.speakers_var, width=5).pack(side=tk.LEFT)
+        # Верхняя панель кнопок
+        top_frame = ctk.CTkFrame(self.root, fg_color="transparent")
+        top_frame.pack(fill="x", padx=20, pady=10)
         
-        tk.Button(top_frame, text="Анализировать", command=self.analyze_audio,
-                 bg="#2196F3", fg="white", padx=20, pady=5).pack(side=tk.LEFT, padx=10)
+        ctk.CTkButton(top_frame, text="📁 Загрузить аудио", command=self.load_audio,
+                     fg_color="#4cc9f0", hover_color="#3a9fc7",
+                     font=("Segoe UI", 13, "bold"), corner_radius=25,
+                     height=40, width=180).pack(side="left", padx=5)
         
-        tk.Button(top_frame, text="Сохранить результат", command=self.save_result,
-                 bg="#FF9800", fg="white", padx=20, pady=5).pack(side=tk.LEFT, padx=10)
+        ctk.CTkLabel(top_frame, text="Спикеров:", 
+                    font=("Segoe UI", 13), text_color="white").pack(side="left", padx=(20, 5))
+        self.speakers_var = ctk.StringVar(value="2")
+        ctk.CTkEntry(top_frame, textvariable=self.speakers_var, width=60,
+                    font=("Segoe UI", 13), corner_radius=15).pack(side="left", padx=5)
         
-        tk.Button(top_frame, text="Статистика", command=self.show_statistics,
-                 bg="#9C27B0", fg="white", padx=20, pady=5).pack(side=tk.LEFT, padx=10)
+        ctk.CTkButton(top_frame, text="▶️ Анализировать", command=self.analyze_audio,
+                     fg_color="#9d4edd", hover_color="#7b2cbf",
+                     font=("Segoe UI", 13, "bold"), corner_radius=25,
+                     height=40, width=180).pack(side="left", padx=5)
+        
+        ctk.CTkButton(top_frame, text="💾 Сохранить", command=self.save_result,
+                     fg_color="#c77dff", hover_color="#9d4edd",
+                     font=("Segoe UI", 13, "bold"), corner_radius=25,
+                     height=40, width=150).pack(side="left", padx=5)
+        
+        ctk.CTkButton(top_frame, text="📊 Статистика", command=self.show_statistics,
+                     fg_color="#5a189a", hover_color="#3c096c",
+                     font=("Segoe UI", 13, "bold"), corner_radius=25,
+                     height=40, width=150).pack(side="left", padx=5)
         
         # Список файлов
-        list_frame = tk.Frame(self.root)
-        list_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+        list_frame = ctk.CTkFrame(self.root, fg_color=("#1a1a2e", "#16213e"), corner_radius=20)
+        list_frame.pack(fill="both", expand=False, padx=20, pady=10, ipady=10)
         
-        tk.Label(list_frame, text="Загруженные файлы:", font=("Arial", 10, "bold")).pack(anchor=tk.W)
+        ctk.CTkLabel(list_frame, text="📋 Загруженные записи:", 
+                    font=("Segoe UI", 14, "bold"), 
+                    text_color="#4cc9f0").pack(anchor="w", padx=20, pady=(10, 5))
         
-        self.file_listbox = tk.Listbox(list_frame, height=5)
-        self.file_listbox.pack(fill=tk.X, pady=5)
+        import tkinter as tk
+        self.file_listbox = tk.Listbox(list_frame, height=5,
+                                       bg="#0d1b2a", fg="white",
+                                       font=("Segoe UI", 11),
+                                       selectbackground="#9d4edd",
+                                       selectforeground="white",
+                                       relief="flat",
+                                       highlightthickness=0)
+        self.file_listbox.pack(fill="x", padx=20, pady=(5, 10))
         self.file_listbox.bind('<<ListboxSelect>>', self.on_file_select)
         
         # Область результатов
-        result_frame = tk.Frame(self.root)
-        result_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+        result_frame = ctk.CTkFrame(self.root, fg_color=("#1a1a2e", "#16213e"), corner_radius=20)
+        result_frame.pack(fill="both", expand=True, padx=20, pady=10)
         
-        tk.Label(result_frame, text="Результат анализа:", font=("Arial", 10, "bold")).pack(anchor=tk.W)
+        ctk.CTkLabel(result_frame, text="📝 Результат транскрибации:", 
+                    font=("Segoe UI", 14, "bold"), 
+                    text_color="#4cc9f0").pack(anchor="w", padx=20, pady=(10, 5))
         
-        self.result_text = scrolledtext.ScrolledText(result_frame, wrap=tk.WORD, height=20)
-        self.result_text.pack(fill=tk.BOTH, expand=True, pady=5)
+        self.result_text = ctk.CTkTextbox(result_frame, wrap="word",
+                                          font=("Segoe UI", 12),
+                                          fg_color="#0d1b2a",
+                                          text_color="white",
+                                          corner_radius=15)
+        self.result_text.pack(fill="both", expand=True, padx=20, pady=(5, 15))
         
         # Статус бар
-        self.status_label = tk.Label(self.root, text="Готов к работе", 
-                                     bd=1, relief=tk.SUNKEN, anchor=tk.W)
-        self.status_label.pack(side=tk.BOTTOM, fill=tk.X)
+        self.status_label = ctk.CTkLabel(self.root, text="✅ Готов к работе",
+                                        font=("Segoe UI", 11),
+                                        text_color="#4cc9f0",
+                                        anchor="w")
+        self.status_label.pack(fill="x", padx=20, pady=(0, 10))
     
     def load_audio(self):
         """Загрузка аудиофайлов"""
@@ -136,10 +188,18 @@ class AudioAnalyzerGUI:
         
         for file_path in files:
             if file_path not in self.audio_files:
-                self.audio_files[file_path] = None
-                self.file_listbox.insert(tk.END, file_path.split("/")[-1])
+                self.meeting_counter += 1
+                date_str = datetime.now().strftime("%d.%m.%Y")
+                display_name = f"Встреча №{self.meeting_counter} от {date_str}"
+                
+                self.audio_files[file_path] = {
+                    'display_name': display_name,
+                    'dialogue': None,
+                    'diarization': None
+                }
+                self.file_listbox.insert("end", display_name)
         
-        self.status_label.config(text=f"Загружено файлов: {len(self.audio_files)}")
+        self.status_label.configure(text=f"✅ Загружено файлов: {len(self.audio_files)}")
     
     def on_file_select(self, event):
         """Обработка выбора файла из списка"""
@@ -148,12 +208,12 @@ class AudioAnalyzerGUI:
             idx = selection[0]
             self.current_file = list(self.audio_files.keys())[idx]
             
-            if self.audio_files[self.current_file]:
-                dialogue = self.audio_files[self.current_file]['dialogue']
-                self.display_result(dialogue)
+            file_data = self.audio_files[self.current_file]
+            if file_data.get('dialogue'):
+                self.display_result(file_data['dialogue'])
             else:
-                self.result_text.delete(1.0, tk.END)
-                self.result_text.insert(tk.END, "Файл еще не проанализирован")
+                self.result_text.delete("0.0", "end")
+                self.result_text.insert("0.0", "📌 Файл еще не проанализирован.\nНажмите '▶️ Анализировать' для начала обработки.")
     
     def analyze_audio(self):
         """Запуск анализа выбранного аудиофайла"""
@@ -167,76 +227,88 @@ class AudioAnalyzerGUI:
             messagebox.showerror("Ошибка", "Введите корректное количество спикеров")
             return
         
-        self.status_label.config(text="Идет анализ...")
-        self.result_text.delete(1.0, tk.END)
-        self.result_text.insert(tk.END, "Обработка... Пожалуйста, подождите...")
+        self.status_label.configure(text="⏳ Идет анализ...")
+        self.result_text.delete("0.0", "end")
+        self.result_text.insert("0.0", "⏳ Обработка аудиозаписи...\nПожалуйста, подождите...")
         
         def run_analysis():
             """Выполнение анализа в отдельном потоке"""
             try:
                 dialogue, diarization = merge_transcription_diarization(self.current_file, n_speakers)
-                self.audio_files[self.current_file] = {
-                    'dialogue': dialogue,
-                    'diarization': diarization
-                }
+                file_data = self.audio_files[self.current_file]
+                file_data['dialogue'] = dialogue
+                file_data['diarization'] = diarization
                 
                 self.root.after(0, lambda: self.display_result(dialogue))
-                self.root.after(0, lambda: self.status_label.config(text="Анализ завершен"))
+                self.root.after(0, lambda: self.status_label.configure(text="✅ Анализ завершен успешно!"))
             except Exception as e:
                 self.root.after(0, lambda: messagebox.showerror("Ошибка", f"Ошибка анализа: {str(e)}"))
-                self.root.after(0, lambda: self.status_label.config(text="Ошибка анализа"))
+                self.root.after(0, lambda: self.status_label.configure(text="❌ Ошибка анализа"))
         
         thread = threading.Thread(target=run_analysis)
         thread.start()
     
     def display_result(self, dialogue):
         """Отображение результата анализа"""
-        self.result_text.delete(1.0, tk.END)
+        self.result_text.delete("0.0", "end")
         
         for speaker, text in dialogue:
-            self.result_text.insert(tk.END, f"{speaker}: ", "speaker")
-            self.result_text.insert(tk.END, f"{text}\n\n")
+            self.result_text.insert("end", f"{speaker}: ", "speaker")
+            self.result_text.insert("end", f"{text}\n\n")
         
-        self.result_text.tag_config("speaker", font=("Arial", 10, "bold"), foreground="#2196F3")
+        self.result_text.tag_config("speaker", foreground="#9d4edd", font=("Segoe UI", 12, "bold"))
     
     def save_result(self):
         """Сохранение результата в текстовый файл"""
-        if not self.current_file or not self.audio_files[self.current_file]:
+        if not self.current_file:
+            messagebox.showwarning("Предупреждение", "Выберите файл")
+            return
+        
+        file_data = self.audio_files[self.current_file]
+        if not file_data.get('dialogue'):
             messagebox.showwarning("Предупреждение", "Нет результатов для сохранения")
             return
         
         file_path = filedialog.asksaveasfilename(
             defaultextension=".txt",
-            filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")],
+            initialfile=file_data['display_name']
         )
         
         if file_path:
-            dialogue = self.audio_files[self.current_file]['dialogue']
+            dialogue = file_data['dialogue']
             with open(file_path, "w", encoding="utf-8") as f:
+                f.write(f"ОТКЛИК - {file_data['display_name']}\n")
+                f.write("="*50 + "\n\n")
                 for speaker, text in dialogue:
                     f.write(f"{speaker}: {text}\n\n")
             
             messagebox.showinfo("Успех", "Результат сохранен")
-            self.status_label.config(text=f"Результат сохранен: {file_path}")
+            self.status_label.configure(text=f"💾 Результат сохранен: {file_path}")
     
     def show_statistics(self):
         """Отображение окна статистики"""
-        if not self.current_file or not self.audio_files[self.current_file]:
-            messagebox.showwarning("Предупреждение", "Выберите проанализированный файл")
+        if not self.current_file:
+            messagebox.showwarning("Предупреждение", "Выберите файл")
             return
         
-        data = self.audio_files[self.current_file]
-        dialogue = data['dialogue']
-        diarization = data['diarization']
+        file_data = self.audio_files[self.current_file]
+        if not file_data.get('dialogue'):
+            messagebox.showwarning("Предупреждение", "Файл еще не проанализирован")
+            return
+        
+        dialogue = file_data['dialogue']
+        diarization = file_data['diarization']
         
         stats = calculate_statistics(dialogue, diarization)
         
-        StatisticsWindow(self.root, self.current_file, stats)
+        StatisticsWindow(self.root, file_data['display_name'], stats)
 
 
 def main():
     """Запуск приложения"""
-    root = tk.Tk()
+    root = ctk.CTk()
+    root.configure(fg_color="#0a0e27")
     app = AudioAnalyzerGUI(root)
     root.mainloop()
 
