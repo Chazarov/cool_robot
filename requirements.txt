@@ -3,4 +3,5 @@ librosa
 scikit-learn
 scipy
 vosk
-customtkinter 
+customtkinter
+pillow 

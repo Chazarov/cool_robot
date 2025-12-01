@@ -22,57 +22,57 @@ class StatisticsWindow:
         main_frame.pack(fill="both", expand=True, padx=20, pady=20)
         
         ctk.CTkLabel(main_frame, text="📊 Статистика анализа", 
-                    font=("Segoe UI", 24, "bold"), text_color="white").pack(pady=15)
+                    font=("Segoe UI", 24, "bold"), text_color="#f0f0f0").pack(pady=15)
         
         # Количество реплик
         turns_frame = ctk.CTkFrame(main_frame, fg_color=("#1a1a2e", "#16213e"), corner_radius=20)
         turns_frame.pack(fill="x", pady=10, padx=5)
         
         ctk.CTkLabel(turns_frame, text="Индекс активности (количество реплик)", 
-                    font=("Segoe UI", 14, "bold"), text_color="#9d4edd").pack(pady=10, padx=20, anchor="w")
+                    font=("Segoe UI", 14, "bold"), text_color="#f0f0f0").pack(pady=10, padx=20, anchor="w")
         
         for speaker, turns in stats['speaker_turns'].items():
             ctk.CTkLabel(turns_frame, text=f"{speaker}: {turns} реплик", 
-                        font=("Segoe UI", 12), text_color="white").pack(pady=5, padx=30, anchor="w")
+                        font=("Segoe UI", 12), text_color="#f0f0f0").pack(pady=5, padx=30, anchor="w")
         
         # Средняя длина высказываний
         length_frame = ctk.CTkFrame(main_frame, fg_color=("#1a1a2e", "#16213e"), corner_radius=20)
         length_frame.pack(fill="x", pady=10, padx=5)
         
         ctk.CTkLabel(length_frame, text="Средняя длина высказываний (слов)", 
-                    font=("Segoe UI", 14, "bold"), text_color="#9d4edd").pack(pady=10, padx=20, anchor="w")
+                    font=("Segoe UI", 14, "bold"), text_color="#f0f0f0").pack(pady=10, padx=20, anchor="w")
         
         for speaker, avg_len in stats['speaker_avg_length'].items():
             ctk.CTkLabel(length_frame, text=f"{speaker}: {avg_len:.1f} слов", 
-                        font=("Segoe UI", 12), text_color="white").pack(pady=5, padx=30, anchor="w")
+                        font=("Segoe UI", 12), text_color="#f0f0f0").pack(pady=5, padx=30, anchor="w")
         
         # Активность обсуждения
         activity_frame = ctk.CTkFrame(main_frame, fg_color=("#1a1a2e", "#16213e"), corner_radius=20)
         activity_frame.pack(fill="x", pady=10, padx=5)
         
         ctk.CTkLabel(activity_frame, text="Активность обсуждения", 
-                    font=("Segoe UI", 14, "bold"), text_color="#9d4edd").pack(pady=10, padx=20, anchor="w")
+                    font=("Segoe UI", 14, "bold"), text_color="#f0f0f0").pack(pady=10, padx=20, anchor="w")
         
         ctk.CTkLabel(activity_frame, text=f"Общее количество пауз: {stats['total_pauses']}", 
-                    font=("Segoe UI", 12), text_color="white").pack(pady=2, padx=30, anchor="w")
+                    font=("Segoe UI", 12), text_color="#f0f0f0").pack(pady=2, padx=30, anchor="w")
         ctk.CTkLabel(activity_frame, text=f"Средняя длина паузы: {stats['avg_pause']:.2f} сек", 
-                    font=("Segoe UI", 12), text_color="white").pack(pady=2, padx=30, anchor="w")
+                    font=("Segoe UI", 12), text_color="#f0f0f0").pack(pady=2, padx=30, anchor="w")
         ctk.CTkLabel(activity_frame, text=f"Оценка активности: {stats['activity_score']:.1f}/100", 
-                    font=("Segoe UI", 12, "bold"), text_color="#4cc9f0").pack(pady=5, padx=30, anchor="w")
+                    font=("Segoe UI", 12, "bold"), text_color="#f0f0f0").pack(pady=5, padx=30, anchor="w")
         
         # Коэффициент равномерности
         uniform_frame = ctk.CTkFrame(main_frame, fg_color=("#1a1a2e", "#16213e"), corner_radius=20)
         uniform_frame.pack(fill="x", pady=10, padx=5)
         
         ctk.CTkLabel(uniform_frame, text="Равномерность распределения речи", 
-                    font=("Segoe UI", 14, "bold"), text_color="#9d4edd").pack(pady=10, padx=20, anchor="w")
+                    font=("Segoe UI", 14, "bold"), text_color="#f0f0f0").pack(pady=10, padx=20, anchor="w")
         
         ctk.CTkLabel(uniform_frame, 
                     text=f"Коэффициент равномерности: {stats['uniformity_coefficient']:.1f}/100", 
-                    font=("Segoe UI", 12, "bold"), text_color="#4cc9f0").pack(pady=5, padx=30, anchor="w")
+                    font=("Segoe UI", 12, "bold"), text_color="#f0f0f0").pack(pady=5, padx=30, anchor="w")
         ctk.CTkLabel(uniform_frame, 
                     text="(100 - идеально равномерно, 0 - один говорит больше всех)", 
-                    font=("Segoe UI", 10), text_color="#808080").pack(pady=2, padx=30, anchor="w")
+                    font=("Segoe UI", 10), text_color="#d0d0d0").pack(pady=2, padx=30, anchor="w")
         
         ctk.CTkButton(main_frame, text="Закрыть", command=self.window.destroy,
                      fg_color="#c77dff", hover_color="#9d4edd", 
@@ -103,10 +103,10 @@ class AudioAnalyzerGUI:
         
         ctk.CTkLabel(header_frame, text="🎙️ ОТКЛИК", 
                     font=("Segoe UI", 32, "bold"), 
-                    text_color="#9d4edd").pack()
+                    text_color="#f0f0f0").pack()
         ctk.CTkLabel(header_frame, text="Анализ аудиозаписей встреч", 
                     font=("Segoe UI", 14), 
-                    text_color="#4cc9f0").pack()
+                    text_color="#f0f0f0").pack()
         
         # Верхняя панель кнопок
         top_frame = ctk.CTkFrame(self.root, fg_color="transparent")
@@ -118,7 +118,7 @@ class AudioAnalyzerGUI:
                      height=40, width=180).pack(side="left", padx=5)
         
         ctk.CTkLabel(top_frame, text="Спикеров:", 
-                    font=("Segoe UI", 13), text_color="white").pack(side="left", padx=(20, 5))
+                    font=("Segoe UI", 13), text_color="#f0f0f0").pack(side="left", padx=(20, 5))
         self.speakers_var = ctk.StringVar(value="2")
         ctk.CTkEntry(top_frame, textvariable=self.speakers_var, width=60,
                     font=("Segoe UI", 13), corner_radius=15).pack(side="left", padx=5)
@@ -144,14 +144,14 @@ class AudioAnalyzerGUI:
         
         ctk.CTkLabel(list_frame, text="📋 Загруженные записи:", 
                     font=("Segoe UI", 14, "bold"), 
-                    text_color="#4cc9f0").pack(anchor="w", padx=20, pady=(10, 5))
+                    text_color="#f0f0f0").pack(anchor="w", padx=20, pady=(10, 5))
         
         import tkinter as tk
         self.file_listbox = tk.Listbox(list_frame, height=5,
-                                       bg="#0d1b2a", fg="white",
+                                       bg="#0d1b2a", fg="#f0f0f0",
                                        font=("Segoe UI", 11),
                                        selectbackground="#9d4edd",
-                                       selectforeground="white",
+                                       selectforeground="#f0f0f0",
                                        relief="flat",
                                        highlightthickness=0)
         self.file_listbox.pack(fill="x", padx=20, pady=(5, 10))
@@ -163,19 +163,28 @@ class AudioAnalyzerGUI:
         
         ctk.CTkLabel(result_frame, text="📝 Результат транскрибации:", 
                     font=("Segoe UI", 14, "bold"), 
-                    text_color="#4cc9f0").pack(anchor="w", padx=20, pady=(10, 5))
+                    text_color="#f0f0f0").pack(anchor="w", padx=20, pady=(10, 5))
         
         self.result_text = ctk.CTkTextbox(result_frame, wrap="word",
                                           font=("Segoe UI", 12),
                                           fg_color="#0d1b2a",
-                                          text_color="white",
+                                          text_color="#f0f0f0",
                                           corner_radius=15)
         self.result_text.pack(fill="both", expand=True, padx=20, pady=(5, 15))
+        
+        # Прогресс бар
+        self.progress_bar = ctk.CTkProgressBar(self.root, 
+                                               mode="determinate",
+                                               progress_color="#9d4edd",
+                                               height=15,
+                                               corner_radius=10)
+        self.progress_bar.set(0)
+        self.progress_bar.pack_forget()  # Скрываем по умолчанию
         
         # Статус бар
         self.status_label = ctk.CTkLabel(self.root, text="✅ Готов к работе",
                                         font=("Segoe UI", 11),
-                                        text_color="#4cc9f0",
+                                        text_color="#f0f0f0",
                                         anchor="w")
         self.status_label.pack(fill="x", padx=20, pady=(0, 10))
     
@@ -215,6 +224,29 @@ class AudioAnalyzerGUI:
                 self.result_text.delete("0.0", "end")
                 self.result_text.insert("0.0", "📌 Файл еще не проанализирован.\nНажмите '▶️ Анализировать' для начала обработки.")
     
+    def update_progress(self, stage, progress, message):
+        """Обновление прогресса анализа"""
+        self.progress_bar.set(progress)
+        self.status_label.configure(text=f"⏳ {stage}: {message}")
+        self.result_text.delete("0.0", "end")
+        
+        stages_info = {
+            "Загрузка": "🎵 Подготовка аудиофайла...",
+            "Транскрибация": "🎤 Распознавание речи...",
+            "Диаризация": "👥 Определение спикеров...",
+            "Объединение": "🔄 Формирование диалога..."
+        }
+        
+        display_text = "⏳ ПРОЦЕСС АНАЛИЗА\n\n"
+        for stage_name, stage_desc in stages_info.items():
+            if stage_name == stage:
+                display_text += f"➤ {stage_desc} [{int(progress*100)}%]\n"
+            else:
+                display_text += f"   {stage_desc}\n"
+        
+        display_text += f"\n{message}"
+        self.result_text.insert("0.0", display_text)
+    
     def analyze_audio(self):
         """Запуск анализа выбранного аудиофайла"""
         if not self.current_file:
@@ -227,21 +259,32 @@ class AudioAnalyzerGUI:
             messagebox.showerror("Ошибка", "Введите корректное количество спикеров")
             return
         
-        self.status_label.configure(text="⏳ Идет анализ...")
-        self.result_text.delete("0.0", "end")
-        self.result_text.insert("0.0", "⏳ Обработка аудиозаписи...\nПожалуйста, подождите...")
+        # Показываем прогресс бар
+        self.progress_bar.pack(fill="x", padx=20, pady=(0, 5), before=self.status_label)
+        self.progress_bar.set(0)
+        
+        self.root.after(0, lambda: self.update_progress("Загрузка", 0.1, "Подготовка к анализу..."))
         
         def run_analysis():
             """Выполнение анализа в отдельном потоке"""
             try:
-                dialogue, diarization = merge_transcription_diarization(self.current_file, n_speakers)
+                # Callback для обновления прогресса
+                def progress_callback(stage, progress, message):
+                    self.root.after(0, lambda: self.update_progress(stage, progress, message))
+                
+                dialogue, diarization = merge_transcription_diarization(
+                    self.current_file, n_speakers, progress_callback
+                )
                 file_data = self.audio_files[self.current_file]
                 file_data['dialogue'] = dialogue
                 file_data['diarization'] = diarization
                 
+                self.root.after(0, lambda: self.progress_bar.set(1.0))
                 self.root.after(0, lambda: self.display_result(dialogue))
                 self.root.after(0, lambda: self.status_label.configure(text="✅ Анализ завершен успешно!"))
+                self.root.after(1000, lambda: self.progress_bar.pack_forget())  # Скрываем через 1 сек
             except Exception as e:
+                self.root.after(0, lambda: self.progress_bar.pack_forget())
                 self.root.after(0, lambda: messagebox.showerror("Ошибка", f"Ошибка анализа: {str(e)}"))
                 self.root.after(0, lambda: self.status_label.configure(text="❌ Ошибка анализа"))
         
@@ -256,7 +299,7 @@ class AudioAnalyzerGUI:
             self.result_text.insert("end", f"{speaker}: ", "speaker")
             self.result_text.insert("end", f"{text}\n\n")
         
-        self.result_text.tag_config("speaker", foreground="#9d4edd", font=("Segoe UI", 12, "bold"))
+        self.result_text.tag_config("speaker", foreground="#f0f0f0", font=("Segoe UI", 12, "bold"))
     
     def save_result(self):
         """Сохранение результата в текстовый файл"""
