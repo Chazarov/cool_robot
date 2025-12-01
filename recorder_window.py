@@ -21,18 +21,7 @@ class RecorderWindow:
         
         # Сервисы
         self.recorder = AudioRecorder()
-        
-        try:
-            self.transcriber = RealtimeTranscriber()
-        except Exception as e:
-            messagebox.showerror(
-                "Ошибка инициализации", 
-                f"Не удалось загрузить модель распознавания речи.\n\n"
-                f"Убедитесь, что папка 'vosk-model-ru-0.42' находится в директории проекта.\n\n"
-                f"Ошибка: {str(e)}"
-            )
-            self.window.destroy()
-            return
+        self.transcriber = RealtimeTranscriber()  # Модель уже загружена через ModelManager
         
         # Состояние
         self.is_recording = False

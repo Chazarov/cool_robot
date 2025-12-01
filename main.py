@@ -5,6 +5,7 @@ from datetime import datetime
 from analyse_service import merge_transcription_diarization
 from statistics_service import calculate_statistics
 from recorder_window import RecorderWindow
+from model_manager import ModelManager
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -382,10 +383,68 @@ class AudioAnalyzerGUI:
 
 def main():
     """Запуск приложения"""
-    root = ctk.CTk()
-    root.configure(fg_color="#0a0e27")
-    app = AudioAnalyzerGUI(root)
-    root.mainloop()
+    # Создаем окно загрузки
+    splash = ctk.CTk()
+    splash.title("ОТКЛИК")
+    splash.geometry("400x200")
+    splash.configure(fg_color="#0a0e27")
+    
+    # Центрируем окно
+    splash.update_idletasks()
+    screen_width = splash.winfo_screenwidth()
+    screen_height = splash.winfo_screenheight()
+    x = (screen_width - 400) // 2
+    y = (screen_height - 200) // 2
+    splash.geometry(f"400x200+{x}+{y}")
+    
+    # Содержимое окна загрузки
+    ctk.CTkLabel(splash, text="🎙️ ОТКЛИК", 
+                font=("Segoe UI", 32, "bold"), 
+                text_color="#f0f0f0").pack(pady=(30, 20))
+    
+    status_label = ctk.CTkLabel(splash, text="⏳ Загрузка модели распознавания...", 
+                                font=("Segoe UI", 12), 
+                                text_color="#f0f0f0")
+    status_label.pack(pady=10)
+    
+    progress = ctk.CTkProgressBar(splash, mode="indeterminate", 
+                                  progress_color="#9d4edd",
+                                  width=300)
+    progress.pack(pady=10)
+    progress.start()
+    
+    def load_model():
+        """Загрузка модели в отдельном потоке"""
+        try:
+            # Предзагрузка модели
+            model_manager = ModelManager()
+            model_manager.get_model()
+            
+            # Закрываем окно загрузки и запускаем основное приложение
+            splash.after(0, lambda: status_label.configure(text="✅ Модель загружена!"))
+            splash.after(500, lambda: start_main_app(splash))
+        except Exception as e:
+            splash.after(0, lambda: messagebox.showerror(
+                "Ошибка загрузки модели",
+                f"Не удалось загрузить модель распознавания речи:\n\n{str(e)}\n\n"
+                f"Убедитесь, что папка 'vosk-model-ru-0.42' находится в директории проекта."
+            ))
+            splash.after(0, lambda: splash.destroy())
+    
+    def start_main_app(splash_window):
+        """Запуск основного приложения"""
+        splash_window.destroy()
+        
+        root = ctk.CTk()
+        root.configure(fg_color="#0a0e27")
+        app = AudioAnalyzerGUI(root)
+        root.mainloop()
+    
+    # Запускаем загрузку модели в отдельном потоке
+    loading_thread = threading.Thread(target=load_model)
+    loading_thread.start()
+    
+    splash.mainloop()
 
 
 if __name__ == "__main__":

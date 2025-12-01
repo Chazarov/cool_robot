@@ -1,23 +1,19 @@
 import json
 import queue
 import threading
-import os
-from vosk import Model, KaldiRecognizer
+from vosk import KaldiRecognizer
 import pyaudio
+from model_manager import ModelManager
 
 
 class RealtimeTranscriber:
     """Сервис распознавания речи в реальном времени"""
     
-    def __init__(self, model_path="vosk-model-ru-0.42", sample_rate=16000):
+    def __init__(self, sample_rate=16000):
         """Инициализация транскрибера"""
-        if not os.path.exists(model_path):
-            raise FileNotFoundError(
-                f"Модель не найдена по пути: {model_path}\n"
-                f"Скачайте модель с https://alphacephei.com/vosk/models и распакуйте в папку проекта"
-            )
-        
-        self.model = Model(model_path)
+        # Используем общую модель через менеджер
+        model_manager = ModelManager()
+        self.model = model_manager.get_model()
         self.sample_rate = sample_rate
         self.recognizer = KaldiRecognizer(self.model, sample_rate)
         self.recognizer.SetWords(True)

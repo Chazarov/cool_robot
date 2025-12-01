@@ -2,8 +2,9 @@ import json
 import wave
 import io
 import numpy as np
-from vosk import Model, KaldiRecognizer
+from vosk import KaldiRecognizer
 import librosa
+from model_manager import ModelManager
 
 
 def convert_to_wav(audio_path):
@@ -21,9 +22,11 @@ def convert_to_wav(audio_path):
     return wav_data
 
 
-def transcribe_audio(audio_path, model_path="vosk-model-ru-0.42"):
+def transcribe_audio(audio_path):
     """Транскрибирует аудиофайл"""
-    model = Model(model_path)
+    # Используем общую модель через менеджер
+    model_manager = ModelManager()
+    model = model_manager.get_model()
     
     wav_data = convert_to_wav(audio_path)
     wf = wave.open(wav_data, "rb")
