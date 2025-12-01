@@ -4,6 +4,7 @@ import threading
 from datetime import datetime
 from analyse_service import merge_transcription_diarization
 from statistics_service import calculate_statistics
+from recorder_window import RecorderWindow
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -112,6 +113,11 @@ class AudioAnalyzerGUI:
         top_frame = ctk.CTkFrame(self.root, fg_color="transparent")
         top_frame.pack(fill="x", padx=20, pady=10)
         
+        ctk.CTkButton(top_frame, text="🎙️ Диктофон", command=self.open_recorder,
+                     fg_color="#e63946", hover_color="#d62828",
+                     font=("Segoe UI", 13, "bold"), corner_radius=25,
+                     height=40, width=150).pack(side="left", padx=5)
+        
         ctk.CTkButton(top_frame, text="📁 Загрузить аудио", command=self.load_audio,
                      fg_color="#4cc9f0", hover_color="#3a9fc7",
                      font=("Segoe UI", 13, "bold"), corner_radius=25,
@@ -187,6 +193,32 @@ class AudioAnalyzerGUI:
                                         text_color="#f0f0f0",
                                         anchor="w")
         self.status_label.pack(fill="x", padx=20, pady=(0, 10))
+    
+    def open_recorder(self):
+        """Открыть окно диктофона"""
+        RecorderWindow(self.root, on_recording_saved=self.on_recording_saved)
+    
+    def on_recording_saved(self, audio_file):
+        """Обработка сохраненной записи из диктофона"""
+        if audio_file and audio_file not in self.audio_files:
+            self.meeting_counter += 1
+            date_str = datetime.now().strftime("%d.%m.%Y %H:%M")
+            display_name = f"Запись №{self.meeting_counter} от {date_str}"
+            
+            self.audio_files[audio_file] = {
+                'display_name': display_name,
+                'dialogue': None,
+                'diarization': None
+            }
+            self.file_listbox.insert("end", display_name)
+            
+            # Автоматически выбираем новую запись
+            self.file_listbox.selection_clear(0, "end")
+            self.file_listbox.selection_set("end")
+            self.current_file = audio_file
+            
+            self.status_label.configure(text=f"✅ Запись добавлена: {display_name}")
+            messagebox.showinfo("Успех", "Запись сохранена и добавлена в список.\nТеперь вы можете её анализировать!")
     
     def load_audio(self):
         """Загрузка аудиофайлов"""
