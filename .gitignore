@@ -31,3 +31,4 @@ ENV/
 !**/migrations/versions/__init__.py
 
 remarks/
+vosk-model-ru-0.42/

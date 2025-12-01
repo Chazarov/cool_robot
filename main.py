@@ -332,7 +332,8 @@ class AudioAnalyzerGUI:
             self.result_text.insert("end", f"{speaker}: ", "speaker")
             self.result_text.insert("end", f"{text}\n\n")
         
-        self.result_text.tag_config("speaker", foreground="#f0f0f0", font=("Segoe UI", 12, "bold"))
+        # CustomTkinter не поддерживает font в tag_config
+        self.result_text.tag_config("speaker", foreground="#9d4edd")
     
     def save_result(self):
         """Сохранение результата в текстовый файл"""

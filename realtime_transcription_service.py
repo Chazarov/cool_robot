@@ -83,8 +83,13 @@ class RealtimeTranscriber:
             except queue.Empty:
                 continue
             except Exception as e:
-                print(f"Ошибка распознавания: {e}")
-                break
+                # При ошибке просто пересоздаем recognizer и продолжаем
+                try:
+                    self.recognizer = KaldiRecognizer(self.model, self.sample_rate)
+                    self.recognizer.SetWords(True)
+                except:
+                    pass
+                continue
     
     def stop_transcription(self):
         """Остановить распознавание"""
